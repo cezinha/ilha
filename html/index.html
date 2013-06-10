@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<html lang="pt" dir="ltr" class="no-js">
+<head>
+<meta charset="utf-8">
+<title>PayPal - Uma ilha pra chamar de sua</title>
+<script src="js/modernizr.js"></script>
+<script type="text/javascript">
+if (!window.jQuery) {
+    yepnope({
+        load: ["js/jquery.min.js", "js/jquery.customCarousel.js", "js/jquery.facebookfriends.js", 
+        "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"]
+    });
+}
+</script>
+<link rel="stylesheet" type="text/css" href="css/anythingslider.css" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<script type="text/javascript" src="js/swfobject.js"></script>
+<script type="text/javascript">
+    // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
+    var swfVersionStr = "9.0.0";
+    // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
+    var xiSwfUrlStr = "swf/expressInstall.swf";
+    var flashvars = {};
+    var params = {};
+    params.quality = "high";
+    params.bgcolor = "#ffffff";
+    params.allowScriptAccess = "always";
+    params.allowFullscreen = "true";
+    var attributes = {};
+    attributes.id = "flashIlha";
+    attributes.name = "flashIlha";
+    attributes.align = "middle";
+    swfobject.embedSWF(
+        "swf/main.swf", "flashContent", 
+        "810", "300", 
+        swfVersionStr, xiSwfUrlStr, 
+        flashvars, params, attributes);
+    // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
+    swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+</script>
+<script>
+var App = {
+    init: function() {
+        FB.api('/me', function(user) {
+            if (user) {
+                $('#Nome').val(user.name);
+                $('#Email').val(user.email);
+            }
+        });
+
+        FB.api('/me/friends', function(response) {
+            $('#formfriends').data('friends', response);
+            App.syncFriends();
+        });
+    },
+    syncFriends: function() {
+        var frmFriends = $('#formfriends');
+        var friends = frmFriends.data('friends');
+        var combos = $("#fbfriends").facebookFriends({
+            "friends": friends.data
+            , "useMalihu": false
+            , onSelected: function(el) {
+                console.log('onSelected')
+                console.log(el.data('name'))
+                App.control.addUser(el.data('name'), el.data('id'));
+                
+                /*var f = el.siblings('input:eq(0)');
+                if(f.length > 0) {
+                    console.log('selected:' + el.data('name') )
+                    f.val('{"id": "' + el.data('id') + '", "name": "' + el.data('name') + '"}');
+
+                }*/
+            }
+            , onUpdate: function(el) {
+                $('#fbfriends .customCarousel').data('customCarousel').resize();
+            }
+            , onUnselected: function(el) {
+                console.log('onUnselected')
+                App.control.removeUser(el.data('id'));
+
+                /*var f = el.siblings('input:eq(0)');
+                if(f.length > 0) {
+                    console.log('unselected:' + el.data('name') )
+                }*/
+            }
+
+        });
+
+        $('#fbfriends .overflow').show();
+        $('#fbfriends ul').customCarousel();
+
+        /*frmFriends.on('submit',function(ev){
+            ev.preventDefault();
+            var dispara = true;
+            $('input:hidden[name^="amigo"]').each(function(i,el){
+                if(el.value == '') dispara = false;
+            });
+            if(!dispara)
+                alert('Faltam amigos!');
+            else
+                this.submit();
+        });*/
+
+        $('#bt-pronto').on('click', 'a', function() {
+            if (App.control.findEmpty() != -1) {
+               console.log('mensagem: não foram selecionados 5 amigos');
+            } else {
+                if () {}
+            }
+        });
+    },
+    updateFriends: function() {
+        console.log('updateFriends:');
+        $('#flashIlha').get(0).updateFriends(App.control.users);
+    },
+    control: {
+        idx: 0,
+        users: new Array( { id: '-1' }, { id: '-1' }, { id: '-1' }, { id: '-1' }, { id: '-1' }),
+        addUser: function(name, id) {
+            id = String(id);
+
+            if (this.findUser(id) == -1) {
+                if (this.idx > -1) {
+                    var upIdx = this.idx;
+
+                    this.users[this.idx] = { name: String(name), id: id};
+                    App.updateFriends();
+
+                    this.idx = this.findEmpty(upIdx);
+
+                    return upIdx;
+                }
+            }
+            return -1;
+        },
+        findEmpty : function(curr) {
+            var len = this.users.length;
+
+            for (var i = curr ; i < len; i++) {
+                if (this.users[i].id == '-1') {
+                    return i;
+                }
+            }
+            for (var i = 0 ; i < len; i++) {
+                if (this.users[i].id == '-1') {
+                    return i;
+                }
+            }
+            return -1;
+        },
+        findUser: function(id) {
+            id = String(id);
+
+            var found = -1;
+            var len = this.users.length;
+
+            if (len > 0) {
+                for (var i = 0 ; i < len ; i++) {
+                    if (this.users[i] && this.users[i].id == id) {
+                        found = i; 
+                        break;
+                    }
+                }
+            }
+
+            return found;
+        },
+        removeUser: function(id) {
+            id = String(id);
+
+            var findId = this.findUser(id),
+            len = this.users.length;
+
+            if (findId > -1) {
+                this.users[findId] = { id: '-1' };
+                this.idx = findId;
+
+
+                var emptyCells = 0;
+                for (var i = 0 ; i < len; i++) {
+                    if (this.users[i].id == '-1') {
+                        emptyCells ++;
+                    }
+                }
+                if (emptyCells == len) {
+                    this.idx = 0;
+                }
+
+                App.updateFriends();
+
+                return true;
+            }
+
+            return false;
+        }
+    }
+}
+
+window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '145406558965121', // App ID
+      channelUrl : '//thawing-dawn-4891.herokuapp.com:8080/channel.html', // Channel File
+      status     : true, // check login status
+      cookie     : true, // enable cookies to allow the server to access the session
+      xfbml      : true  // parse XFBML
+    });
+
+    FB.Event.subscribe('auth.authResponseChange', function(response) {
+
+        if (response.status === 'connected') {
+            App.init();
+        } else if (response.status === 'not_authorized') {
+            FB.login(function(response) { 
+                    App.init();
+                },
+                {scope: "email,publish_stream,photo_upload,share_item"});
+        } else {
+            FB.login(function(response) { 
+                    App.init();
+                },
+                {scope: "email,publish_stream,photo_upload,share_item"});
+        }
+    });
+};
+
+// Load the SDK Asynchronously
+(function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+</head>
+<body>
+<div id="fb-root"></div>
+<fb:login-button show-faces="true" width="200" max-rows="1" scope="email,publish_stream,photo_upload,share_item"></fb:login-button>
+<img id="foto" />
+<div id="main">
+    <div class="bg">
+        <div class="ilha">
+            <div id="header">
+                <h1>uma ILHA pra chamar de sua</h1>
+                <h2>Por que você e 5 amigos merecem ir para uma ilha?</h2>
+                <div id="paypal"></div>            
+            </div>
+            <div id="video">
+                <a href="#video">play</a>
+            </div>
+            <div id="flashContent">
+            </div>           
+        </div>
+    </div>
+    <div class="form">
+        <div class="wrap">
+            <form action="#" id="formfriends" data-friends="" method="post">          
+            <h3 class="perg1">Informe seus dados e responda a pergunta</h3>
+            <ul class="dados">
+                <li><label for="Nome">Nome</label><br /><input type="text" name="Nome" id="Nome" minlength="2" required /></li>
+                <li><label for="Email">Email</label><br /><input type="email" name="Email" id="Email" required /></li>
+            </ul>
+            <h3 class="perg2">Marque os amigos que você quer levar para a Sua ilha</h3> 
+            <div id="fbfriends"></div>
+            <div id="bt-pronto"><a href="#">pronto, já escolhi meus amigos</a></div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="lightbox">
+    <div class="bg"></div>
+    <div class="popup"></div>
+</div>
+</body>
+</html>
