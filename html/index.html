@@ -6,16 +6,20 @@
 <title>PayPal - Uma ilha pra chamar de sua</title>
 <script src="js/modernizr.js"></script>
 <script type="text/javascript">
-if (!window.jQuery) {
+/*if (!window.jQuery) {
     yepnope({
         load: ["js/jquery.min.js", "js/jquery.customCarousel.js", "js/jquery.facebookfriends.js", 
         "js/jquery.validate.min.js"]
     });
-}
+}*/
 </script>
 <link rel="stylesheet" type="text/css" href="css/style.css" />
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.customCarousel.js"></script>
+<script type="text/javascript" src="js/jquery.facebookfriends.js"></script>
 <script type="text/javascript" src="js/script.js"></script>
 <script type="text/javascript" src="js/swfobject.js"></script>
+<script type="text/javascript" src="js/imagesloaded.pkgd.min.js"></script>
 <script type="text/javascript">
     // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
     var swfVersionStr = "9.0.0";
@@ -36,7 +40,7 @@ if (!window.jQuery) {
         "swf/main.swf", "flashIlha", 
         "810", "418", 
         swfVersionStr, xiSwfUrlStr, 
-        flashvars, params, attributes);
+        flashvars, params, attributes, App.flashCreated);
     // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
     swfobject.createCSS("#flashIlha", "display:block;text-align:left;");
 </script>
@@ -61,7 +65,7 @@ window.fbAsyncInit = function() {
                         App.init(access_token);
                     }
                 },
-                {scope: "email,publish_stream,user_photos"});
+                {scope: "email,publish_stream,user_photos,friends_photos"});
         } else {
             FB.login(function(response) { 
                     if (response.authResponse) {
@@ -69,7 +73,7 @@ window.fbAsyncInit = function() {
                         App.init(access_token);
                     }
                 },
-                {scope: "email,publish_stream,user_photos"});
+                {scope: "email,publish_stream,user_photos,friends_photos"});
         }
     });
 };
@@ -87,7 +91,7 @@ window.fbAsyncInit = function() {
 <body>
 <div id="fb-root"></div>
 <div id="fb-button">
-<fb:login-button show-faces="true" width="200" max-rows="1" scope="email,publish_stream,user_photos"></fb:login-button>
+<fb:login-button show-faces="true" width="200" max-rows="1" scope="email,publish_stream,user_photos,friends_photos"></fb:login-button>
 </div>
 <div id="main">
     <div class="bg">
@@ -122,11 +126,11 @@ window.fbAsyncInit = function() {
 <div id="lightbox">
     <div class="bg"></div>
     <div class="popup">
-        <p></p>
+        <!--p></p>
         <div class="btns">
             <a href="#refazer" class="refazer">Não, quero refazer.</a>
             <a href="#publicar" class="publicar">Sim, pode publicar!</a>
-        </div>
+        </div-->
     </div>
 </div>
 </body>

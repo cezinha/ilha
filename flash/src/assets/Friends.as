@@ -5,6 +5,7 @@ package assets
 	import flash.display.SimpleButton;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.text.StyleSheet;
 	import flash.text.TextField;
 	import flash.external.ExternalInterface;
 	
@@ -47,9 +48,10 @@ package assets
 		}
 
 		public function update(arr:Array):Number {
-			_friends = arr;
+			this._friends = arr;
 			var len = _fotos.length;
 			var count = 0;
+			
 			for (var i = 0; i < len; i ++) {
 				if (arr[i].id == '-1') {
 					_fotos[i].unload();
@@ -74,8 +76,13 @@ package assets
 			nomes = users.join(', ');
 			nomes = nomes.substring(0, nomes.lastIndexOf(',')) + " e" + nomes.substring(nomes.lastIndexOf(',')+1, nomes.length);
 
-			txtMensagem.htmlText = 'Você escolheu ' + nomes + '.\nSão eles que você quer levar para a ilha?';	
+			var myCSS:StyleSheet = new StyleSheet();
+			myCSS.setStyle("b", {fontFamily: "Arial Bold", fontWeight: "bold"});
+			
 			txtMensagem.visible = true;
+			txtMensagem.wordWrap = true;
+			txtMensagem.styleSheet = myCSS;
+			txtMensagem.htmlText = 'Você escolheu ' + nomes + '.<br>São eles que você quer levar para a ilha?';	
 			
 			btnSim.visible = true;
 			btnSim.addEventListener(MouseEvent.CLICK, onSimClick);

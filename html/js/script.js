@@ -3,6 +3,7 @@ function saved() {
 }
 
 var App = {
+    flash: null,
     access_token: null,
     Util: {
         isEmail: function(email) {
@@ -44,6 +45,12 @@ var App = {
                     f.val('{"id": "' + el.data('id') + '", "name": "' + el.data('name') + '"}');
 
                 }*/
+            }
+            , onReady: function(el) {
+                console.log('built!');
+                imagesLoaded( $("#fbfriends"), function( instance ) {
+                  console.log('all images are loaded');
+                });
             }
             , onUpdate: function(el) {
                 $('#fbfriends .customCarousel').data('customCarousel').resize();
@@ -93,12 +100,15 @@ var App = {
             $('span.error').remove();
         });
     },
+    flashCreated: function(e) {
+        App.flash = e.ref;
+    },
     updateFriends: function() {
         console.log('updateFriends:');
-        $('#flashIlha').get(0).updateFriends(App.control.users);
+        App.flash.updateFriends(App.control.users);
     },
     confirm: function() {
-        $('#flashIlha').get(0).preview();
+        App.flash.preview();
 
         /*var nomes, 
         users = [], 

@@ -34,13 +34,11 @@ body { font-family: Arial, sans-serif; font-size: 14px; color: #6e6e6e; margin: 
 #fbfriends .searchField input {width: 300px;margin-left: 5px;}
 #lightbox {position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; z-index: 100;}
 #lightbox .bg { background: #000; opacity: 0.8; width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
-#lightbox .popup {width: 730px;height: 418px;position: absolute;z-index: 145;background: url(../img/lightbox-bg.png) no-repeat 0 0;
-top: 150px;
-left: 270px;}
+#lightbox .popup {width: 730px;height: 418px;position: absolute;z-index: 145;}
 #lightbox .popup p {margin: 290px 70px 16px;}
 #lightbox .btns {margin-left: 70px;}
-#lightbox .btns a { display: block; float: left; width: 273px; height: 42px; background: url(../img/lightbox-btn.png) no-repeat 0 0; text-indent: -30000em }
-#lightbox .btns a.publicar {background-position: -299px;width: 302px;margin-left: 13px;}
+/*#lightbox .btns a { display: block; float: left; width: 273px; height: 42px; background: url(../img/lightbox-btn.png) no-repeat 0 0; text-indent: -30000em }*/
+/*#lightbox .btns a.publicar {background-position: -299px;width: 302px;margin-left: 13px;}*/
 #flashIlha {position: absolute; top: 395px; left: 0; z-index: 150;}
 #bt-pronto{ position: relative;top: 40px;left: 140px; }
 #bt-pronto a{display:block; background: url(../img/btn-escolhi.png) no-repeat 0 0; width: 361px; height: 37px; text-decoration: none; text-indent: -30000em;}

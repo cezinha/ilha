@@ -16,6 +16,7 @@
 	import flash.geom.Rectangle;
 	import flash.system.Security;
 	import flash.text.TextField;
+	import com.adobe.serialization.json.JSON;
 	import flash.utils.ByteArray;
 	import Config;
 	
@@ -75,13 +76,16 @@
 		}
 		
 		public function updateFriends(arr): void {
-			var count = mcFriends.update(arr);			
+			txt.appendText('updateFriends' + arr + '\n');
+			var count = mcFriends.update(arr);
+			txt.appendText('count: ' + count + '\n');
 			mcBoxCount.update(count);
 		}
 		
 		public function preview():void {
 			mcBoxCount.visible = false;
 			
+			mcFriends.preview();
 			mcFriends.addEventListener(FriendsEvent.CONFIRM, onFriendsConfirm);
 			mcFriends.addEventListener(FriendsEvent.CANCEL, onFriendsCancel);
 		}
@@ -102,16 +106,17 @@
 			var pos : Array = [ { x: 10, y: 10 }, { x: 30, y: 20 }, { x: 50, y: 15 }, { x: 70, y: 15 }, { x: 90, y: 20 } ];
 			
 			for (var i = 0; i < len; i++) {
-				tags.push( { to: friends[i].id, x: pos[i].x, y: pos[i].y } );
+				tags.push( { 'tag_uid': friends[i].id, 'x': pos[i].x, 'y': pos[i].y } );
 			}
 			
 			var params = {
 				message : "Mensagem de teste ",
 				image : bytes,
 				fileName: 'FILE_NAME',
-				tags: tags
+				tags: JSON.encode(tags)
 			};	
 			
+			txt.appendText(JSON.encode(tags) + '\n');
 			Facebook.api('/me/photos', onPostouFoto, params, "POST");
 			
 			if (ExternalInterface.available) {
